@@ -7,6 +7,7 @@ typedef enum : NSUInteger {
 typedef enum : NSInteger {
     SortTypeNone = 0,
     SortTypeSelection,
+    SortTypeInsertionImprove,
     SortTypeInsertion
 } SortType;
 
@@ -40,6 +41,8 @@ typedef enum : NSInteger {
 
 // 选择排序
 + (void)selectionSort:(NSMutableArray *)originArray;
+// 优化的选择排序
++ (void)insertionSortImprove:(NSMutableArray *)originArray;
 // 插入排序
 + (void)insertionSort:(NSMutableArray *)originArray;
 
@@ -52,6 +55,19 @@ typedef enum : NSInteger {
         for (int j = (i + 1); j < originArray.count; j++) {
             if ([originArray[j] compare:originArray[i]] == NSOrderedAscending) {
                   [originArray exchangeObjectAtIndex:i withObjectAtIndex:j];
+            }
+        }
+    }
+}
+
++ (void)insertionSortImprove:(NSMutableArray *)originArray {
+    
+    for (int i = 1; i < originArray.count; i++) {
+        id currentToSortValue = originArray[i];
+        for (int j = (i - 1); j > 0; j--) {
+            if ([originArray[j+1] compare:originArray[j]] == NSOrderedAscending) {
+                originArray[j+1] = originArray[j];
+                originArray[j]   = currentToSortValue;
             }
         }
     }
@@ -97,6 +113,11 @@ typedef enum : NSInteger {
                 [Sort insertionSort:arr];
             }
             break;
+        case SortTypeInsertionImprove:
+                {
+                    [Sort insertionSort:arr];
+                }
+                break;
         default:
             break;
     }
@@ -118,10 +139,19 @@ typedef enum : NSInteger {
 
 int main(int argc, char *argv[]) {
     @autoreleasepool {
-        int count = 2000;
-        NSMutableArray *mutableArray = [[RandomData randomArray:RandomWayIntegerFromZero count:count with:@1000] mutableCopy];
-        [TestSort sortTimerTestName:@"插入排序" methodType:SortTypeInsertion sortArray:mutableArray];
+        int count = 10000;
         
-        assert([TestSort sortedAscending:mutableArray]);
+        NSMutableArray *mutableArraySelction        = [[RandomData randomArray:RandomWayIntegerFromZero count:count with:@1000] mutableCopy];
+        NSMutableArray *mutableArrayInsertionImprove = [mutableArraySelction mutableCopy];
+        NSMutableArray *mutableArrayInsertion       = [mutableArraySelction mutableCopy];
+        
+        [TestSort sortTimerTestName:@"选择排序" methodType:SortTypeSelection sortArray:mutableArraySelction];
+        assert([TestSort sortedAscending:mutableArraySelction]);
+        
+        [TestSort sortTimerTestName:@"引入变量的插入排序" methodType:SortTypeInsertionImprove sortArray:mutableArrayInsertionImprove];
+        assert([TestSort sortedAscending:mutableArrayInsertionImprove]);
+        
+        [TestSort sortTimerTestName:@"插入排序" methodType:SortTypeInsertion sortArray:mutableArrayInsertion];
+        assert([TestSort sortedAscending:mutableArrayInsertion]);
     }
 }
