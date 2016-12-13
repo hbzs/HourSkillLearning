@@ -65,21 +65,26 @@ typedef enum _RandomWay {
 
 @interface Sort : NSObject
 
-// 选择排序
-+ (void)selectionSort:(NSMutableArray *)originArray;
+// 插入排序
++ (void)insertionSort:(NSMutableArray *)originArray;
 
 @end
 
 @implementation Sort
 
-+ (void)selectionSort:(NSMutableArray *)originArray {
-    for (int i = 0; i < (originArray.count - 1); i++) {
-        for (int j = (i + 1); j < originArray.count; j++) {
-            if ([originArray[j] compare:originArray[i]] == NSOrderedAscending) {
-                  [originArray exchangeObjectAtIndex:i withObjectAtIndex:j];
++ (void)insertionSort:(NSMutableArray *)originArray {
+    
+    for (int i = 1; i < originArray.count; i++) {
+        for (int j = i; j > 0; j--) {
+            
+            if ([originArray[j] compare:originArray[j-1]] == NSOrderedAscending) {
+                [originArray exchangeObjectAtIndex:j withObjectAtIndex:j-1];
+            } else {
+                break;
             }
         }
     }
+    
     NSLog(@"%@",originArray);
 }
 
@@ -98,6 +103,6 @@ int main(int argc, char *argv[]) {
     //                                          [[Student alloc] initWithName:@"summary" score:@95]] mutableCopy];
         NSMutableArray *mutableArray = [[RandomData randomArray:RandomWayIntegerFromZero count:10 with:@1000] mutableCopy];
         NSLog(@"%@",mutableArray);
-        [Sort selectionSort:mutableArray];
+        [Sort insertionSort:mutableArray];
     }
 }
