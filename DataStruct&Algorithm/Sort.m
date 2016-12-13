@@ -1,8 +1,14 @@
 #import <Foundation/Foundation.h>
 
-typedef enum _RandomWay {
-    RandomWayIntegerFromZero
+typedef enum : NSUInteger {
+    RandomWayIntegerFromZero = 0
 } RandomWay;
+
+typedef enum : NSInteger {
+    SortTypeNone = 0,
+    SortTypeSelection,
+    SortTypeInsertion
+} SortType;
 
 @interface RandomData : NSObject
 
@@ -32,12 +38,24 @@ typedef enum _RandomWay {
 
 @interface Sort : NSObject
 
+// 选择排序
++ (void)selectionSort:(NSMutableArray *)originArray;
 // 插入排序
 + (void)insertionSort:(NSMutableArray *)originArray;
 
 @end
 
 @implementation Sort
+
++ (void)selectionSort:(NSMutableArray *)originArray {
+    for (int i = 0; i < (originArray.count - 1); i++) {
+        for (int j = (i + 1); j < originArray.count; j++) {
+            if ([originArray[j] compare:originArray[i]] == NSOrderedAscending) {
+                  [originArray exchangeObjectAtIndex:i withObjectAtIndex:j];
+            }
+        }
+    }
+}
 
 + (void)insertionSort:(NSMutableArray *)originArray {
     
@@ -51,20 +69,41 @@ typedef enum _RandomWay {
             }
         }
     }
-    
-    NSLog(@"%@",originArray);
 }
 
 @end
 
 @interface TestSort : NSObject
 
+// 排序并计算时间
++ (void)sortTimerTestName:(NSString *)sortName methodType:(SortType)sortType sortArray:(NSMutableArray *)arr;
 // 是否为升序排序
 + (BOOL)sortedAscending:(NSArray *)arr;
 
 @end
 
 @implementation TestSort
+
++ (void)sortTimerTestName:(NSString *)sortName methodType:(SortType)sortType sortArray:(NSMutableArray *)arr {
+    NSDate *startDate = [NSDate date];
+    switch (sortType) {
+    	case SortTypeSelection:
+            {
+                [Sort selectionSort:arr];
+            }
+            break;
+        case SortTypeInsertion:
+            {
+                [Sort insertionSort:arr];
+            }
+            break;
+        default:
+            break;
+    }
+    NSDate *endDate   = [NSDate date];
+    NSTimeInterval secondsBetweenDates = [endDate timeIntervalSinceDate:startDate];
+    NSLog(@"数组共有%@个元素，%@花费了%@秒", @(arr.count), sortName, @(secondsBetweenDates));
+}
 
 + (BOOL)sortedAscending:(NSArray *)arr {
     for (int i = 1; i < arr.count; i++) {
@@ -79,9 +118,9 @@ typedef enum _RandomWay {
 
 int main(int argc, char *argv[]) {
     @autoreleasepool {
-        NSMutableArray *mutableArray = [[RandomData randomArray:RandomWayIntegerFromZero count:10 with:@1000] mutableCopy];
-        NSLog(@"%@",mutableArray);
-        [Sort insertionSort:mutableArray];
+        int count = 2000;
+        NSMutableArray *mutableArray = [[RandomData randomArray:RandomWayIntegerFromZero count:count with:@1000] mutableCopy];
+        [TestSort sortTimerTestName:@"插入排序" methodType:SortTypeInsertion sortArray:mutableArray];
         
         assert([TestSort sortedAscending:mutableArray]);
     }
