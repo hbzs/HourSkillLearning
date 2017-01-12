@@ -6,3 +6,5 @@ DataStruct&Algorithm/Sort
 DataStruct&Algorithm/Sort.dSYM/Contents/Resources/DWARF/Sort
 
 *.plist
+node_modules/
+package.json
