@@ -21,7 +21,8 @@
 
   - 使用 `<view/>、<image/>、<text/>` 等搭建页面结构，绑定数据和交互处理函数
 
-  - ```html
+  - block
+  ```html
     <block wx:for-items="{{logs}}" wx:for-item="log">
       <text class="log-item">{{index + 1}}. {{log}}</text> 
     </block>
