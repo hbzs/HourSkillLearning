@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Module Develop</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%
+        }
+        
+        body {
+            background-color: #fff;
+            margin: 0;
+        }
+        
+        #wrap {
+            height: 100%;
+            position: relative;
+        }
+        
+        #header {
+            padding-top: 20px;
+            background-color: #5082c2;
+            height: 44px;
+            position: relative;
+        }
+        
+        #header h1 {
+            font-size: 20px;
+            height: 44px;
+            line-height: 44px;
+            margin: 0em;
+            color: #fff;
+            margin-left: 100px;
+            margin-right: 100px;
+            text-align: center;
+        }
+        
+        #main {
+            display: block;
+        }
+        
+        a.button {
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            height: 36px;
+            margin: 8px;
+            background-color: rgba(240, 240, 240, 1.0);
+            border-color: rgba(220, 220, 220, 1.0);
+            border-width: 2px;
+            border-style: solid;
+        }
+        
+        input {
+            display: -webkit-box;
+            height: 36px;
+            margin: 8px auto;
+            width: 50%;
+            background-color: rgba(240, 240, 240, 1.0);
+            border-color: rgba(220, 220, 220, 1.0);
+            border-width: 2px;
+            border-style: solid;
+        }
+        
+        input[type="text"] {
+            font-size: 20px;
+        }
+        
+        a.active {
+            background-color: rgba(240, 240, 240, 0.6);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+            <h1 id="title">模块开发</h1>
+        </header>
+        <div id="main">
+            <a class="button" tapmode="active" onclick="printLog()">控制台打印</a>
+            <a class="button" tapmode="active" onclick="remoteResource()">资源文件远程读取</a>
+            <a class="button" tapmode="active" onclick="localResource()">资源文件本地读取</a>
+            <a class="button" tapmode="active" onclick="canBack()">接口的回调</a>
+            <input type="text" id="playerTImer" readonly="readonly">
+            <a class="button" tapmode="active" onclick="nextPage()">UI 相关</a>
+        </div>
+    </div>
+</body>
+<script>
+	function nativeMessage(ret) {
+		api.alert({msg: ret.content});
+	}
+
+    apiready = function() {
+		api.addEventListener({
+	        name:'nativeEvent'
+        },function(ret,err){
+        		if (ret) {
+        			alert( JSON.stringify( ret ) );
+        		}
+        });
+    }
+
+    function printLog() {
+        var logModule = api.require('logModule');
+        logModule.printLog();
+    }
+
+    function remoteResource() {
+        var resource = api.require('resourceModule');
+        resource.remoteResource({
+            image: "widget://image/ocean.png"
+        });
+    }
+
+    function localResource() {
+        var resource = api.require('resourceModule');
+        resource.localResource();
+    }
+
+    function canBack() {
+        var resource = api.require('canBackModule');
+        resource.canBack(function(ret, err) {
+            document.getElementById('playerTImer').value = ret.msg;
+        });
+    }
+    
+    function nextPage() {
+        var delay = 0;
+
+        if("ios" != api.systemType){
+            delay = 300;
+        }
+
+        api.openWin({
+                    name: "nextPage",
+                    url: "./nextPage.html",
+                    pageParam: {},
+                    bounces: false,
+                    vScrollBarEnabled:false,
+                    hScrollBarEnabled:false,
+                    reload: true,
+                    delay: delay
+                }
+        );
+    }
+</script>
+
+</html>

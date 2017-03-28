@@ -1,0 +1,22 @@
+[
+ {
+    "name":"logModule",
+    "class":"LogModule",
+    "methods":["printLog"]
+ },
+ {
+ "name":"resourceModule",
+ "class":"ResourceModule",
+ "methods":["remoteResource","localResource"]
+ },
+ {
+ "name":"canBackModule",
+ "class":"CanBackModule",
+ "methods":["canBack"]
+ },
+ {
+ "name":"viewRelatedModule",
+ "class":"ViewRelatedModule",
+ "methods":["addUIView", "nativePushVC"]
+ }
+]
